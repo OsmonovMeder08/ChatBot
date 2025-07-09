@@ -1,6 +1,6 @@
-// Вместо жесткого импорта ключей, берем из переменных окружения Vite
-const WEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || '';
+// 🔑 Ключи жёстко прописаны
+const WEATHER_API_KEY = '9f3417c99ab1a50c2cf3a0fcd44c615a';
+const OPENAI_API_KEY = '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';
 
 interface WeatherMain {
   temp: number;
@@ -10,50 +10,36 @@ interface WeatherMain {
   humidity: number;
 }
 
-interface WeatherCondition {
-  main: string;
-  description: string;
-  icon: string;
-}
-
-interface Wind {
-  speed: number;
-}
-
-export interface WeatherData {
+interface WeatherData {
   name: string;
   main: WeatherMain;
-  weather: WeatherCondition[];
-  wind: Wind;
+  weather: { main: string; description: string; icon: string }[];
+  wind: { speed: number };
 }
 
 export class APIService {
   static async getWeather(city: string): Promise<WeatherData> {
     try {
-      if (WEATHER_API_KEY) {
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${WEATHER_API_KEY}&units=metric&lang=ru`
-        );
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${WEATHER_API_KEY}&units=metric&lang=ru`
+      );
 
-        if (!response.ok) {
-          throw new Error(`OpenWeather API error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        return {
-          ...data,
-          main: {
-            ...data.main,
-            temp: Math.round(data.main.temp),
-            feels_like: Math.round(data.main.feels_like),
-            temp_min: Math.round(data.main.temp_min),
-            temp_max: Math.round(data.main.temp_max),
-          },
-        };
+      if (!response.ok) {
+        throw new Error(`OpenWeather API error: ${response.statusText}`);
       }
 
-      return this.getDemoWeather(city);
+      const data = await response.json();
+
+      return {
+        ...data,
+        main: {
+          ...data.main,
+          temp: Math.round(data.main.temp),
+          feels_like: Math.round(data.main.feels_like),
+          temp_min: Math.round(data.main.temp_min),
+          temp_max: Math.round(data.main.temp_max),
+        },
+      };
     } catch (error) {
       console.error('Weather API error:', error);
       return this.getDemoWeather(city);
@@ -100,44 +86,37 @@ export class APIService {
 
   static async sendChatMessage(message: string): Promise<string> {
     try {
-      if (OPENAI_API_KEY) {
-        const response = await fetch('https://openrouter.ai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${OPENAI_API_KEY}`,
-          },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini', // или другой, поддерживаемый openrouter
-            messages: [
-              {
-                role: 'system',
-                content:
-                  'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
-              },
-              { role: 'user', content: message },
-            ],
-            max_tokens: 500,
-            temperature: 0.7,
-          }),
-        });
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-4o', // используем OpenRouter-совместимую модель
+          messages: [
+            {
+              role: 'system',
+              content:
+                'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
+            },
+            { role: 'user', content: message },
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+      });
 
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${text}`);
-        }
-
-        const data = await response.json();
-
-        const aiMessage = data.choices?.[0]?.message?.content;
-        if (aiMessage) {
-          return aiMessage.trim();
-        }
-        throw new Error('Empty response from OpenRouter');
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
-      const fallbackResponses = this.generateSmartResponse(message);
-      return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+      const data = await response.json();
+      const aiMessage = data.choices?.[0]?.message?.content;
+      if (aiMessage) return aiMessage.trim();
+
+      throw new Error('Empty response from OpenRouter');
     } catch (error) {
       console.error('Chat API error:', error);
       return 'Извините, произошла ошибка. Попробуйте еще раз.';
@@ -149,41 +128,40 @@ export class APIService {
 
     if (lowerMessage.includes('погода') || lowerMessage.includes('weather')) {
       return [
-        'Для получения актуальной информации о погоде перейдите в раздел "Погода" в навигационном меню. Там вы сможете узнать прогноз для любого города мира!',
-        'Я могу помочь вам с информацией о погоде! Воспользуйтесь разделом "Погода" для получения точных данных о температуре, влажности и ветре.',
-        'Хотите узнать погоду? В разделе "Погода" доступна информация по всему миру с актуальными данными!',
+        'Для получения актуальной информации о погоде перейдите в раздел "Погода" в навигационном меню.',
+        'Я могу помочь вам с погодой! Откройте раздел "Погода", чтобы увидеть температуру, ветер и влажность.',
+        'Погода доступна в специальном разделе. Просто введите название города.',
       ];
     }
 
     if (lowerMessage.includes('meda') || lowerMessage.includes('меда')) {
       return [
-        'MEDA - это современная платформа, которая объединяет AI-помощника, прогноз погоды и аналитику. Я здесь, чтобы помочь вам с любыми вопросами!',
-        'Добро пожаловать в MEDA! Это многофункциональная платформа с искусственным интеллектом. Чем могу помочь?',
-        'MEDA предоставляет множество возможностей: от общения с AI до получения данных о погоде. Исследуйте все разделы!',
+        'MEDA — это умная платформа, объединяющая прогноз погоды и AI-помощника.',
+        'В MEDA вы можете узнать погоду, получить совет от ИИ и многое другое!',
+        'Добро пожаловать в MEDA — чем могу помочь?',
       ];
     }
 
     if (lowerMessage.includes('привет') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
       return [
-        'Привет! Я AI-помощник MEDA. Готов помочь вам с любыми вопросами. О чем хотите поговорить?',
-        'Здравствуйте! Рад вас видеть в MEDA. Чем могу быть полезен?',
-        'Привет! Добро пожаловать! Я здесь, чтобы помочь вам. Задавайте любые вопросы!',
+        'Привет! Чем могу помочь?',
+        'Здравствуйте! Я здесь, чтобы помочь вам.',
+        'Добро пожаловать! Готов ответить на ваш вопрос.',
       ];
     }
 
     if (lowerMessage.includes('помощь') || lowerMessage.includes('help')) {
       return [
-        'Конечно, помогу! Вы можете спросить меня о возможностях MEDA, попросить совет, узнать о погоде или просто поболтать. Что вас интересует?',
-        'Я готов помочь! Могу рассказать о функциях платформы, дать советы или ответить на вопросы. О чем хотите узнать?',
-        'С удовольствием помогу! Доступны разделы: погода, аналитика, профиль. Также могу просто поговорить с вами!',
+        'Вы можете спросить меня о погоде, ИИ-помощнике или платформе MEDA.',
+        'Задайте вопрос — и я помогу!',
+        'Помощь доступна всегда — просто напишите свой вопрос.',
       ];
     }
 
     return [
-      `Интересный вопрос о "${message}"! Я AI-помощник MEDA и готов обсудить это с вами. Расскажите больше деталей.`,
-      `Спасибо за ваше сообщение: "${message}". Как AI-помощник, я стараюсь быть максимально полезным. Чем еще могу помочь?`,
-      `Понимаю, что вы имеете в виду касательно "${message}". В MEDA есть много возможностей - исследуйте разделы или задавайте вопросы!`,
-      `Отличная тема для обсуждения! "${message}" - это то, о чем можно поговорить. Что конкретно вас интересует?`,
+      `Вы спросили: "${message}". Расскажите подробнее — я помогу!`,
+      `Интересно! "${message}" — расскажите чуть больше.`,
+      `Я готов обсудить: "${message}". Что именно интересует?`,
     ];
   }
 }
