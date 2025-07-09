@@ -1,5 +1,6 @@
-export const WEATHER_API_KEY = '9f3417c99ab1a50c2cf3a0fcd44c615a';
-export const OPENAI_API_KEY = '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';
+// Вместо жесткого импорта ключей, берем из переменных окружения Vite
+const WEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || '';
 
 interface WeatherMain {
   temp: number;
@@ -100,7 +101,7 @@ export class APIService {
   static async sendChatMessage(message: string): Promise<string> {
     try {
       if (OPENAI_API_KEY) {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        const response = await fetch('https://openrouter.ai/v1/chat/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +123,8 @@ export class APIService {
         });
 
         if (!response.ok) {
-          throw new Error(`OpenRouter API error: ${response.statusText}`);
+          const text = await response.text();
+          throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${text}`);
         }
 
         const data = await response.json();
