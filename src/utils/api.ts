@@ -1,6 +1,5 @@
-// 🔑 Ключи жёстко прописаны
 const WEATHER_API_KEY = '9f3417c99ab1a50c2cf3a0fcd44c615a';
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = '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';
 
 interface WeatherMain {
   temp: number;
@@ -85,43 +84,43 @@ export class APIService {
   }
 
   static async sendChatMessage(message: string): Promise<string> {
-  try {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`, // ← ключ OpenRouter
-      },
-      body: JSON.stringify({
-        model: 'openai/gpt-4o',
-        messages: [
-          {
-            role: 'system',
-            content:
-              'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
-          },
-          { role: 'user', content: message },
-        ],
-        max_tokens: 500,
-        temperature: 0.7,
-      }),
-    });
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`, // Важно: именно так должен передаваться ключ
+        },
+        body: JSON.stringify({
+          model: 'openai/gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
+            },
+            { role: 'user', content: message },
+          ],
+          max_tokens: 500,
+          temperature: 0.7,
+        }),
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorText}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      const aiMessage = data.choices?.[0]?.message?.content;
+      if (aiMessage) return aiMessage.trim();
+
+      throw new Error('Empty response from OpenRouter');
+    } catch (error) {
+      console.error('Chat API error:', error);
+      return 'Извините, произошла ошибка. Попробуйте еще раз.';
     }
-
-    const data = await response.json();
-    const aiMessage = data.choices?.[0]?.message?.content;
-    if (aiMessage) return aiMessage.trim();
-
-    throw new Error('Empty response from OpenRouter');
-  } catch (error) {
-    console.error('Chat API error:', error);
-    return 'Извините, произошла ошибка. Попробуйте еще раз.';
   }
-}
 
   private static generateSmartResponse(message: string): string[] {
     const lowerMessage = message.toLowerCase();
