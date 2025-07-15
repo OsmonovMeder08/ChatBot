@@ -63,7 +63,7 @@ const About: React.FC = () => {
         
         <div className="space-y-4">
           <h1 className="text-4xl md:text-6xl font-bold">
-            О проекте <span className="gradient-text">MEDA</span>
+            About <span className="gradient-text">MedaX</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Современная платформа, объединяющая искусственный интеллект, прогноз погоды и продвинутую аналитику для максимального удобства пользователей.

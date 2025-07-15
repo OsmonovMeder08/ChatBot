@@ -73,7 +73,7 @@ const Home: React.FC = () => {
         <div className="space-y-4">
           <h1 className="text-4xl md:text-6xl font-bold">
             {t('welcome')}{' '}
-            <span className="gradient-text">MEDA</span>
+            <span className="gradient-text">MedaX</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             {t('welcomeDesc')}

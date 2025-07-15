@@ -1,5 +1,5 @@
 const WEATHER_API_KEY = '9f3417c99ab1a50c2cf3a0fcd44c615a';
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = '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';
 
 interface WeatherMain {
   temp: number;
