@@ -1,5 +1,5 @@
 const WEATHER_API_KEY = '9f3417c99ab1a50c2cf3a0fcd44c615a';
-const OPENROUTER_API_KEY = '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';
+const TOGETHER_API_KEY = '83156738eb5b21efef07601ad7e906c404cc0ff830213bdd7a43324feda442e8';
 
 interface WeatherMain {
   temp: number;
@@ -83,21 +83,21 @@ export class APIService {
     };
   }
 
+  // ⬇️ Заменённый метод — теперь работает через Together.ai
   static async sendChatMessage(message: string): Promise<string> {
     try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch('https://api.together.xyz/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`, // Важно: именно так должен передаваться ключ
+          Authorization: `Bearer ${TOGETHER_API_KEY}`, // Вместо OpenRouter используем Together
         },
         body: JSON.stringify({
-          model: 'openai/gpt-4o',
+          model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
           messages: [
             {
               role: 'system',
-              content:
-                'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
+              content: 'Ты — дружелюбный AI-помощник, говорящий по-русски. Помогай пользователю с ответами, учитывай контекст.',
             },
             { role: 'user', content: message },
           ],
@@ -108,16 +108,16 @@ export class APIService {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorText}`);
+        throw new Error(`Together.ai API error: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
       const aiMessage = data.choices?.[0]?.message?.content;
       if (aiMessage) return aiMessage.trim();
 
-      throw new Error('Empty response from OpenRouter');
+      throw new Error('Empty response from Together.ai');
     } catch (error) {
-      console.error('Chat API error:', error);
+      console.error('Chat API error (Together):', error);
       return 'Извините, произошла ошибка. Попробуйте еще раз.';
     }
   }
