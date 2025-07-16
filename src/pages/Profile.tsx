@@ -317,9 +317,9 @@ const Profile: React.FC = () => {
                 <h3 className="text-lg font-medium text-white mb-4">Активные сессии</h3>
                 <div className="space-y-3">
                   {[
-                    { device: 'Chrome на Windows', location: 'Москва, Россия', current: true },
-                    { device: 'Safari на MacBook', location: 'Санкт-Петербург, Россия', current: false },
-                    { device: 'Mobile App', location: 'Екатеринбург, Россия', current: false }
+                    { device: 'Chrome на Windows', location: 'Бишкек, Кыргызстан', current: true },
+                    { device: 'Safari на MacBook', location: 'Кызыл-Токой, Кыргызстан', current: false },
+                    { device: 'Mobile App', location: 'Ош, Кыргызстан', current: false }
                   ].map((session, index) => (
                     <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                       <div>

@@ -47,12 +47,12 @@ const Navigation: React.FC<NavigationProps> = ({ isOpen, onToggle }) => {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         md:translate-x-0
       `}>
-        <div className="p-6">
+        <div className="p-10">
           <div className="flex items-center space-x-3 mb-8">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
+              <span className="text-red font-bold text-sm">M</span>
             </div>
-            <h1 className="text-xl font-bold gradient-text">MEDA</h1>
+            <h1 className="text-xl font-bold gradient-text">MedaX</h1>
           </div>
 
           <ul className="space-y-2">

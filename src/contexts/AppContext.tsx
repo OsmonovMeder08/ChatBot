@@ -24,8 +24,8 @@ const initialState: AppState = {
   theme: 'dark',
   language: 'ru',
   user: {
-    name: 'Иван Петров',
-    email: 'ivan.petrov@example.com'
+    name: 'Osmonov Meder',
+    email: 'mrmedaea08@gmail.com'
   },
   notifications: true,
   autoSave: true

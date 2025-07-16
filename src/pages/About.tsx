@@ -10,7 +10,10 @@ import {
   Zap,
   Shield,
   Users,
-  Heart
+  Heart,
+  MessageCircleIcon,
+  MessageSquareMoreIcon,
+  Moon
 } from 'lucide-react';
 
 const About: React.FC = () => {
@@ -50,7 +53,7 @@ const About: React.FC = () => {
     { label: 'Активных пользователей', value: '1,200+' },
     { label: 'Обработано запросов', value: '50K+' },
     { label: 'Время работы', value: '99.9%' },
-    { label: 'Средняя оценка', value: '4.9/5' }
+    { label: 'Средняя оценка', value: '4.3/5' }
   ];
 
   return (
@@ -66,7 +69,8 @@ const About: React.FC = () => {
             About <span className="gradient-text">MedaX</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Современная платформа, объединяющая искусственный интеллект, прогноз погоды и продвинутую аналитику для максимального удобства пользователей.
+            A modern platform that combines artificial intelligence, 
+            weather forecasting and advanced analytics for maximum user convenience.
           </p>
         </div>
       </div>
@@ -88,21 +92,21 @@ const About: React.FC = () => {
       {/* Mission */}
       <div className="glass-card p-8 md:p-12">
         <div className="max-w-3xl mx-auto text-center space-y-6">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-            <Heart className="w-8 h-8 text-white" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+            <Moon className="w-10 h-10 text-red" />
           </div>
           
-          <h2 className="text-3xl font-bold text-white">Наша миссия</h2>
+          <h2 className="text-3xl font-bold text-white">Our Mission</h2>
           
           <p className="text-lg text-gray-300 leading-relaxed">
-            Мы создаем MEDA с целью предоставить пользователям единую платформу для решения повседневных задач. 
-            Наш AI-помощник готов ответить на любые вопросы, система прогноза погоды предоставляет точную информацию, 
-            а аналитический модуль помогает отслеживать активность и производительность.
+            We are building MEDA to provide users with a single platform for solving everyday problems. 
+            Our AI assistant is ready to answer any questions, the weather forecast system provides accurate information, 
+            and the analytics module helps track activity and productivity.
           </p>
           
           <p className="text-gray-400">
-            Мы верим в силу технологий для улучшения качества жизни людей и стремимся создавать продукты, 
-            которые не только функциональны, но и приятны в использовании.
+            We believe in the power of technology to improve people's lives and strive to create products,
+            that are not only functional but also enjoyable to use.
           </p>
         </div>
       </div>
@@ -110,7 +114,7 @@ const About: React.FC = () => {
       {/* Features */}
       <div>
         <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Ключевые особенности
+          Key Features
         </h2>
         
         <div className="grid md:grid-cols-2 gap-6">
@@ -138,7 +142,7 @@ const About: React.FC = () => {
       {/* Technologies */}
       <div>
         <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Технологический стек
+          Tech stack
         </h2>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -168,26 +172,26 @@ const About: React.FC = () => {
           <Users className="w-16 h-16 mx-auto text-blue-400" />
           
           <h2 className="text-3xl font-bold text-white">
-            Команда разработки
+            Development team
           </h2>
           
           <p className="text-gray-300 max-w-2xl mx-auto">
-            MEDA создается командой опытных разработчиков, дизайнеров и инженеров, 
-            которые стремятся создать лучший пользовательский опыт.
+            MEDA is built by a team of experienced developers, 
+            designers and engineers who are committed to creating the best user experience.
           </p>
           
           <div className="flex justify-center space-x-4 pt-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              А
+            <div className="w-16 h-16 bg-gradient-to-r from-red-500 from-blue-400 from-yellow-300 to-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              A
             </div>
-            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              Б
+            <div className="w-16 h-16 bg-gradient-to-r from-gray-500 to-red-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+              B
             </div>
             <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              В
+              C
             </div>
             <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-              Г
+              D
             </div>
           </div>
         </div>
@@ -196,10 +200,10 @@ const About: React.FC = () => {
       {/* Contact */}
       <div className="glass-card p-8">
         <div className="text-center space-y-6">
-          <Mail className="w-16 h-16 mx-auto text-green-400" />
+          <MessageSquareMoreIcon className="w-16 h-16 mx-auto text-red-500" />
           
-          <h2 className="text-3xl font-bold text-white">
-            Свяжитесь с нами
+          <h2 className="text-4xl font-bold text-green">
+            Contact Me
           </h2>
           
           <p className="text-gray-300">
@@ -242,7 +246,7 @@ const About: React.FC = () => {
           ))}
         </div>
         <p className="text-gray-300">
-          Средняя оценка пользователей: <span className="text-white font-semibold">4.9/5</span>
+          Средняя оценка пользователей: <span className="text-white font-semibold">4.3/5</span>
         </p>
       </div>
     </div>
